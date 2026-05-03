@@ -1,0 +1,43 @@
+[project]
+name = "fast-api-project-template"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "aleksa.miks",email = "aleksa.m@coinis.com"}
+]
+requires-python = ">=3.14,<4.0"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "pydantic-settings",
+    "sqlalchemy",
+    "psycopg[binary]",
+    "kink",
+    "tenacity",
+    "tsidpy",
+    "alembic (>=1.18.4,<2.0.0)",
+    "bcrypt (>=5.0.0,<6.0.0)",
+    "PyJWT (>=2.0.0,<3.0.0)",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "mypy",
+]
+
+[project.scripts]
+start = "manage:poetry_start"
+test = "manage:poetry_test"
+typecheck = "manage:poetry_typecheck"
+
+[tool.poetry]
+packages = [
+    {include = "app"},
+    {include = "manage.py"}
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
