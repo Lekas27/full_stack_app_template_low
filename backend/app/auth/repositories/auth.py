@@ -2,7 +2,7 @@ from typing import Protocol
 
 from sqlalchemy import insert, select
 
-from app.database.models import User
+from app.auth.models.auth_model import User
 from app.database.session_factory import ISessionFactory
 from app.utils.di import inject
 
