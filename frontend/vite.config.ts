@@ -9,8 +9,8 @@ const shouldUseChecker = true;
 export default defineConfig(async () => {
   const plugins: PluginOption[] = [
     tanstackRouter({
-      routesDirectory: "./src/app/router/routes",
-      generatedRouteTree: "./src/app/router/route-tree.gen.ts",
+      routesDirectory: "./src/router/routes",
+      generatedRouteTree: "./src/router/route-tree.gen.ts",
       routeFileIgnorePrefix: "-",
       quoteStyle: "single",
     }),

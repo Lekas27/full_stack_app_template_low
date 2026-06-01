@@ -9,18 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as _authorizeRouteImport } from './routes/__authorize'
 import { Route as _publicIndexRouteImport } from './routes/__public/index'
 import { Route as _authorizeProfileRouteImport } from './routes/__authorize/profile'
 
+const _authorizeRoute = _authorizeRouteImport.update({
+  id: '/__authorize',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const _publicIndexRoute = _publicIndexRouteImport.update({
   id: '/__public/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const _authorizeProfileRoute = _authorizeProfileRouteImport.update({
-  id: '/__authorize/profile',
+  id: '/profile',
   path: '/profile',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => _authorizeRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -33,6 +38,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/__authorize': typeof _authorizeRouteWithChildren
   '/__authorize/profile': typeof _authorizeProfileRoute
   '/__public/': typeof _publicIndexRoute
 }
@@ -41,16 +47,23 @@ export interface FileRouteTypes {
   fullPaths: '/profile' | '/'
   fileRoutesByTo: FileRoutesByTo
   to: '/profile' | '/'
-  id: '__root__' | '/__authorize/profile' | '/__public/'
+  id: '__root__' | '/__authorize' | '/__authorize/profile' | '/__public/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  _authorizeProfileRoute: typeof _authorizeProfileRoute
+  _authorizeRoute: typeof _authorizeRouteWithChildren
   _publicIndexRoute: typeof _publicIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/__authorize': {
+      id: '/__authorize'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof _authorizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/__public/': {
       id: '/__public/'
       path: '/'
@@ -63,13 +76,25 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof _authorizeProfileRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof _authorizeRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
+interface _authorizeRouteChildren {
+  _authorizeProfileRoute: typeof _authorizeProfileRoute
+}
+
+const _authorizeRouteChildren: _authorizeRouteChildren = {
   _authorizeProfileRoute: _authorizeProfileRoute,
+}
+
+const _authorizeRouteWithChildren = _authorizeRoute._addFileChildren(
+  _authorizeRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  _authorizeRoute: _authorizeRouteWithChildren,
   _publicIndexRoute: _publicIndexRoute,
 }
 export const routeTree = rootRouteImport
